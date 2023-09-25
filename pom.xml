@@ -56,7 +56,12 @@
             <artifactId>spring-kafka</artifactId>
         </dependency>
 
-
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>4.2.0</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Testcontainers -->
         <dependency>
@@ -89,6 +94,7 @@
             <artifactId>postgresql</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -110,6 +116,7 @@
                         <plugin>spring</plugin>
                         <plugin>jpa</plugin>
                         <plugin>no-arg</plugin>
+                        <plugin>kotlinx-serialization</plugin>
                     </compilerPlugins>
                     <pluginOptions>
                         <option>all-open:annotation=jakarta.persistence.Entity</option>
@@ -121,6 +128,11 @@
                     <dependency>
                         <groupId>org.jetbrains.kotlin</groupId>
                         <artifactId>kotlin-maven-allopen</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-noarg</artifactId>
                         <version>${kotlin.version}</version>
                     </dependency>
                 </dependencies>

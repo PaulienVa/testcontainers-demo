@@ -12,7 +12,7 @@ class KafkaInitializer : ApplicationContextInitializer<ConfigurableApplicationCo
     override fun initialize(applicationContext: ConfigurableApplicationContext) {
         val kafka = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"))
             .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "true")
-            .withEnv("KAFKA_CREATE_TOPICS", "testcontainers")
+            .withEnv("KAFKA_CREATE_TOPICS", "students")
 
         kafka.start()
 

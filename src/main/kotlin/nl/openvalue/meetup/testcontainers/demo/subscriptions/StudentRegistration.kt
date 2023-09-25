@@ -8,13 +8,14 @@ import org.springframework.stereotype.Service
 class StudentRegistration(private val studentService: StudentService) {
 
     @KafkaListener(topics = ["students"], groupId = "demo")
-    fun listenGroupFoo(message: StudentRegistrationMessage) {
+    fun listenStudents(message: StudentRegistrationMessage) {
+        println("Receiving message")
         studentService.processStudentRegistration(message)
     }
 }
 
 data class StudentRegistrationMessage(
     val name: String,
-    val yearOfRegistration: Number,
+    val yearOfRegistration: Int,
     val mainCourse: String
 )

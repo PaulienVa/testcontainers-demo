@@ -1,23 +1,21 @@
 package nl.openvalue.meetup.testcontainers.demo.persistence
 
+import jakarta.persistence.*
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import java.util.*
 
 @Repository
 interface StudentDao : JpaRepository<Student, Long> {
-    fun findByName(name: String) : Student
+    fun findByName(name: String) : Optional<Student>
 }
 
 @Entity(name = "students")
 class Student (
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_id_seq")
     val studentId: Long? = null,
     val name: String,
-    val yearOfRegistration: Number,
+    val yearOfRegistration: Int,
     val mainCourse: String
 )
