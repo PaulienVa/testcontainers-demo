@@ -15,17 +15,17 @@ import java.sql.SQLException
 @Testcontainers
 class SimpleTest {
 
-    private val logger = KotlinLogging.logger {}
+    val logger = KotlinLogging.logger {}
 
-    private val username = "postgres"
-    private val password = "postgres"
+    private val USERNAME = "postgres"
+    private val PASSWORD = "postgres"
 
     @Container
     private val postgresContainer = PostgreSQLContainer("postgres:13")
         .apply {
             withDatabaseName("postgres")
-            withUsername(username)
-            withPassword(password)
+            withUsername(USERNAME)
+            withPassword(PASSWORD)
             withInitScript("db/schema/V0001__create_students.sql")
         }
 
@@ -34,8 +34,8 @@ class SimpleTest {
 
     @BeforeEach
     fun configure() {
-        val jdbcUrl = postgresContainer.jdbcUrl
-        connection = DriverManager.getConnection(jdbcUrl, username, password);
+        val jdbcUrl = postgresContainer.getJdbcUrl()
+        connection = DriverManager.getConnection(jdbcUrl, USERNAME, PASSWORD);
     }
 
     @Test
