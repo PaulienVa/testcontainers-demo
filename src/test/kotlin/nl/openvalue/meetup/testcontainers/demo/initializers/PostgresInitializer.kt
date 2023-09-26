@@ -1,23 +1,28 @@
 package nl.openvalue.meetup.testcontainers.demo.initializers
 
+import mu.KotlinLogging
 import org.springframework.boot.test.util.TestPropertyValues
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.event.ContextClosedEvent
 import org.testcontainers.containers.PostgreSQLContainer
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.Paths
-import kotlin.io.path.listDirectoryEntries
 
 class PostgresInitializer: ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-    override fun initialize(applicationContext: ConfigurableApplicationContext) {
-        assertThatDbScriptExists()
+    private val logger = KotlinLogging.logger {}
 
-        println("Starting Postgres container...")
+    private val postgresContainer = PostgreSQLContainer("postgres:13")
+            .apply {
+                withDatabaseName("postgres")
+                withUsername("postgres")
+                withPassword("postgres")
+            }
+
+    override fun initialize(applicationContext: ConfigurableApplicationContext) {
+
+        logger.info { "Starting Postgres container..." }
         postgresContainer.start()
-        println("Started Postgres container on ${postgresContainer.jdbcUrl}")
+        logger.info {"Started Postgres container on ${postgresContainer.jdbcUrl}" }
 
         TestPropertyValues.of(
             "spring.datasource.url=${postgresContainer.jdbcUrl}",
@@ -27,33 +32,11 @@ class PostgresInitializer: ApplicationContextInitializer<ConfigurableApplication
 
         applicationContext.addApplicationListener {
             if (it is ContextClosedEvent) {
-                println("Stopping Postgres container...")
+                logger.info { "Stopping Postgres container..." }
                 postgresContainer.stop()
             }
         }
     }
-
-    companion object {
-
-        private val PATH_TO_SCHEMA = "src/main/resources/db/migration"
-
-        val postgresContainer = PostgreSQLContainer("postgres:13")
-            .apply {
-                withDatabaseName("postgres")
-                withUsername("postgres")
-                withPassword("postgres")
-            }
-    }
-
-    private fun assertThatDbScriptExists() {
-        val path: Path =
-            Paths.get(PATH_TO_SCHEMA)
-        if (Files.isDirectory(path)) {
-            if (path.listDirectoryEntries("*.sql").isEmpty()) {
-                throw RuntimeException("🛑 Migrations not found. Please run `get-db-schema.sh` first!")
-            }
-        } else {
-            throw RuntimeException("🛑 Migration folder not found")
-        }
-    }
 }
+
+

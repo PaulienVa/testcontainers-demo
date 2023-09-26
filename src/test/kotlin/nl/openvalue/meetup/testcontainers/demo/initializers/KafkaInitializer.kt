@@ -1,5 +1,6 @@
 package nl.openvalue.meetup.testcontainers.demo.initializers
 
+import mu.KotlinLogging
 import org.springframework.boot.test.util.TestPropertyValues
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ConfigurableApplicationContext
@@ -8,6 +9,7 @@ import org.testcontainers.utility.DockerImageName
 
 class KafkaInitializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
 
+    private val logger = KotlinLogging.logger {}
 
     override fun initialize(applicationContext: ConfigurableApplicationContext) {
         val kafka = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"))
@@ -16,7 +18,7 @@ class KafkaInitializer : ApplicationContextInitializer<ConfigurableApplicationCo
 
         kafka.start()
 
-        println("Kafka config : ${kafka.bootstrapServers}")
+        logger.info { "Kafka config : ${kafka.bootstrapServers}" }
         TestPropertyValues.of(
             "spring.kafka.bootstrap-servers=${kafka.bootstrapServers}"
         ).applyTo(applicationContext.environment)

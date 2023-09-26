@@ -1,5 +1,6 @@
 package nl.openvalue.meetup.testcontainers.demo.services
 
+import mu.KotlinLogging
 import nl.openvalue.meetup.testcontainers.demo.persistence.Student
 import nl.openvalue.meetup.testcontainers.demo.persistence.StudentDao
 import nl.openvalue.meetup.testcontainers.demo.subscriptions.StudentRegistrationMessage
@@ -9,9 +10,10 @@ import nl.openvalue.meetup.testcontainers.demo.api.Student as StudentApi
 
 @Service
 class StudentService(private val studentDao: StudentDao) {
+    val logger = KotlinLogging.logger {}
 
     fun processStudentRegistration(message: StudentRegistrationMessage) {
-        println("Persisting message")
+        logger.info { "Persisting student with name ${message.name}" }
         studentDao.save(
             Student(
                 name = message.name,
