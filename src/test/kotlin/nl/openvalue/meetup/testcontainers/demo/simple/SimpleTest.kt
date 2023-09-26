@@ -35,7 +35,7 @@ class SimpleTest {
     @BeforeEach
     fun configure() {
         val jdbcUrl = postgresContainer.getJdbcUrl()
-        connection = DriverManager.getConnection(jdbcUrl, USERNAME, PASSWORD);
+        connection = DriverManager.getConnection(jdbcUrl, USERNAME, PASSWORD)
     }
 
     @Test
@@ -45,7 +45,8 @@ class SimpleTest {
         try {
             val prepareStatement = connection.prepareStatement(
                 """
-                INSERT INTO students(student_id, name, year_of_registration, main_course) VALUES (11, 'betty', 2009, 'mathematics');
+                INSERT INTO students(student_id, name, year_of_registration, main_course) 
+                VALUES (11, 'betty', 2009, 'mathematics');
             """.trimIndent()
             )
             prepareStatement.execute()
